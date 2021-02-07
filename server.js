@@ -12,6 +12,10 @@ const server = express()
 
 const wss = new Server({ server });
 
+const { PeerServer } = require('peer');
+
+const peerServer = PeerServer({ port: 9000, path: '/peer' });
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('close', () => console.log('Client disconnected'));
