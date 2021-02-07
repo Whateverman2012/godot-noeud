@@ -1,16 +1,30 @@
-const express = require('express');
-const { ExpressPeerServer } = require('peer');
+import * as express from 'express';
+import * as http from 'http';
+import * as WebSocket from 'ws';
 
 const app = express();
 
-app.get('/', (req, res, next) => res.send('Hello world!'));
+//initialize a simple http server
+const server = http.createServer(app);
 
-// =======
+//initialize the WebSocket server instance
+const wss = new WebSocket.Server({ server });
 
-const server = app.listen(9000);
+wss.on('connection', (ws: WebSocket) => {
 
-const peerServer = ExpressPeerServer(server, {
-  path: '/myapp'
+    //connection is up, let's add a simple simple event
+    ws.on('message', (message: string) => {
+
+        //log the received message and send it back to the client
+        console.log('received: %s', message);
+        ws.send(`Hello, you sent -> ${message}`);
+    });
+
+    //send immediatly a feedback to the incoming connection    
+    ws.send('Hi there, I am a WebSocket server');
 });
 
-app.use('/peerjs', peerServer);
+//start our server
+server.listen(process.env.PORT || 10001, () => {
+    console.log(`Server started on port ${server.address().port} :)`);
+});
