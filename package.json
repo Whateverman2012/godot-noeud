@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Whateverman2012/godot-noeud/issues"
   },
-  "homepage": "https://github.com/Whateverman2012/godot-noeud#readme"
+  "homepage": "https://github.com/Whateverman2012/godot-noeud#readme",
+  "dependencies": {
+    "bufferutil": "^4.0.3",
+    "express": "^4.17.1",
+    "utf-8-validate": "^5.0.4",
+    "ws": "^7.4.3"
+  }
 }
