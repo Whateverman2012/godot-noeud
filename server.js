@@ -1,30 +1,26 @@
-import * as express from 'express';
-import * as http from 'http';
-import * as WebSocket from 'ws';
+'use strict';
 
-const app = express();
+const express = require('express');
+const { Server } = require('ws');
 
-//initialize a simple http server
-const server = http.createServer(app);
+const PORT = process.env.PORT || 3000;
+const INDEX = '/index.html';
 
-//initialize the WebSocket server instance
-const wss = new WebSocket.Server({ server });
+const server = express()
+//  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-wss.on('connection', (ws: WebSocket) => {
+const wss = new Server({ server });
 
-    //connection is up, let's add a simple simple event
-    ws.on('message', (message: string) => {
 
-        //log the received message and send it back to the client
-        console.log('received: %s', message);
-        ws.send(`Hello, you sent -> ${message}`);
-    });
 
-    //send immediatly a feedback to the incoming connection    
-    ws.send('Hi there, I am a WebSocket server');
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  ws.on('close', () => console.log('Client disconnected'));
 });
 
-//start our server
-server.listen(process.env.PORT || 10001, () => {
-    console.log(`Server started on port ${server.address().port} :)`);
-});
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    client.send(new Date().toTimeString());
+  });
+}, 1000);
