@@ -20,7 +20,7 @@ wss.on('connection', (ws) => {
 			console.log('received: %s', message);
 			wss.clients.forEach(function(client) {       
 				if (client !== ws) client.send(message);
-				else client.send('ack: %s', message);
+				else client.send('ack: %s' % message);
 			});
   });
 	
