@@ -1,28 +1,24 @@
-var WebSocketServer = require("ws").Server
-var http = require("http")
-var express = require("express")
-var app = express()
-var port = process.env.PORT || 10001
+'use strict';
 
-app.use(express.static(__dirname + "/"))
+const express = require('express');
+const { Server } = require('ws');
 
-var server = http.createServer(app)
-server.listen(port)
+const PORT = process.env.PORT || 3000;
+const INDEX = '/index.html';
 
-console.log("http server listening on %d", port)
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-var wss = new WebSocketServer({server: server})
-console.log("websocket server created")
+const wss = new Server({ server });
 
-wss.on("connection", function(ws) {
-  var id = setInterval(function() {
-    ws.send(JSON.stringify(new Date()), function() {  })
-  }, 1000)
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  ws.on('close', () => console.log('Client disconnected'));
+});
 
-  console.log("websocket connection open")
-
-  ws.on("close", function() {
-    console.log("websocket connection close")
-    clearInterval(id)
-  })
-})
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    client.send(new Date().toTimeString());
+  });
+}, 1000);
