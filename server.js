@@ -37,5 +37,5 @@ setInterval(() => {
   wss.clients.forEach((client) => {
     client.send('.');
   });
-}, 1000);
+}, 5000);
 
