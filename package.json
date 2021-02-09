@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/Whateverman2012/godot-noeud#readme",
   "dependencies": {
-    "@gd-com/utils": "github:gd-com/utils",
     "bufferutil": "^4.0.3",
     "express": "^4.17.1",
     "utf-8-validate": "^5.0.4",
